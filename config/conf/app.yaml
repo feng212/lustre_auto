@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+# config.yaml
+etcd:
+  endpoints:
+    - "172.16.100.172:2379"
+    - "172.16.100.173:2379"
+    - "172.16.100.174:2379"
+  dial_timeout: 5 # seconds
+  lease_ttl: 10   # seconds
+
+lustre:
+  mkfsoptions: "-m1 -E lazy_itable_init=0,lazy_journal_init=0,discard -O project,large_dir,ea_inode"
+  backfstype: "ldiskfs"
+  mgs: "tune2fs -O MMP"
+  mds: "tune2fs -O ea_inode"
+  common: "tune2fs -E mmp_update_interval=5"
+
