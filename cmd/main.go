@@ -2,17 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
+	"lustre_auto/config"
 	"lustre_auto/router"
 	"net/http"
 	"os"
 )
 
 func main() {
-	gin.SetMode(setting.ServerSetting.RunMode)
-	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)
-
+	endPoint := fmt.Sprintf(":%d", config.ConfigData.Server.Port)
 	server := &http.Server{
 		Addr:    endPoint,
 		Handler: router.InitRouter(),

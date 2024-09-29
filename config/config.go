@@ -8,13 +8,15 @@ import (
 )
 
 type AppConfig struct {
-	Server Server `yaml:"server"`
-	Etcd   Etcd   `yaml:"etcd"`
-	Lustre Lustre `yaml:"lustre"`
+	Server     Server     `yaml:"server"`
+	Etcd       Etcd       `yaml:"etcd"`
+	Lustre     Lustre     `yaml:"lustre"`
+	Controller Controller `yaml:"controller"`
 }
 
 type Server struct {
 	Port string `yaml:"port"`
+	IP   string `yaml:"ip"`
 }
 
 type Etcd struct {
@@ -29,6 +31,15 @@ type Lustre struct {
 	Mgs         string `yaml:"mgs"`
 	Mdt         string `yaml:"mdt"`
 	Common      string `yaml:"common"`
+}
+
+type Controller struct {
+	Name string `yaml:"name"`
+	Node Node   `yaml:"node"`
+}
+type Node struct {
+	A string `yaml:"A"`
+	B string `yaml:"B"`
 }
 
 var (

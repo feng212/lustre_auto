@@ -1,5 +1,6 @@
 server:
   port: 8080
+  IP: "172.16.100.150"
 
 # config.yaml
 etcd:
@@ -16,4 +17,10 @@ lustre:
   mgs: "tune2fs -O MMP"
   mds: "tune2fs -O ea_inode"
   common: "tune2fs -E mmp_update_interval=5"
+
+controller:
+  name: controller_1
+  node:
+    A: "172.16.100.150"
+    B: "172.16.100.151"
 

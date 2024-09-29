@@ -1,4 +1,4 @@
-package main
+package etcd
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 
 // 客户端对象
 type Client struct {
-	client     *clientv3.Client
+	Client3    *clientv3.Client
 	kv         clientv3.KV
 	lease      clientv3.Lease
 	watch      clientv3.Watcher
@@ -19,8 +19,10 @@ type Client struct {
 	lock       sync.Mutex
 }
 
+var Clients *Client
+
 // 初始化客户端对象
-func InitClient(addr []string) (*Client, error) {
+func InitClient(addr []string) error {
 	conf := clientv3.Config{
 		Endpoints:   addr,
 		DialTimeout: 5 * time.Second,
@@ -28,7 +30,7 @@ func InitClient(addr []string) (*Client, error) {
 	client, err := clientv3.New(conf)
 	if err != nil {
 		fmt.Printf("create connection etcd failed %s\n", err)
-		return nil, err
+		return err
 	}
 
 	// 得到 KV 、Lease、 Watcher 的API子集
@@ -37,14 +39,16 @@ func InitClient(addr []string) (*Client, error) {
 	watch := clientv3.NewWatcher(client)
 
 	// 给客户端对象赋值
-	c := &Client{
-		client:     client,
+
+	Clients = &Client{
+		Client3:    client,
 		kv:         kv,
 		lease:      lease,
 		watch:      watch,
 		serverList: make(map[string]string),
 	}
-	return c, nil
+
+	return nil
 }
 
 // 根据注册的服务名，获取服务实例的信息
@@ -82,7 +86,7 @@ func (c *Client) extractAddrs(resp *clientv3.GetResponse) []string {
 func (c *Client) SetServiceList(key, val string) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	// serverList 为初始化设置的本地 map 对象，由于考虑到多个 client 运行，所以需要加锁控制
+	// serverList 为初始化设置的本地 map 对象，由于考虑到多个 Client3 运行，所以需要加锁控制
 	c.serverList[key] = string(val)
 	fmt.Println("set data key :", key, "val:", val)
 }

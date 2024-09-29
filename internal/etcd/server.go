@@ -1,4 +1,4 @@
-package main
+package etcd
 
 import (
 	"context"
@@ -116,6 +116,8 @@ func (s *ServiceRegister) RevokeLease() error {
 	return err
 
 }
+
+var Service *ServiceRegister
 
 func main() {
 	service, _ := InitService(config.ConfigData.Etcd.Endpoints, 5)
